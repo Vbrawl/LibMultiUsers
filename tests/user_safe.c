@@ -12,10 +12,10 @@ int main() {
 	int rc = 0;
 	user_data_t *ud;
 
-	rc |= get_user_data(TEST_FOR_USER, &ud);
+	rc |= get_user_data_safe(TEST_FOR_USER, strlen(TEST_FOR_USER), &ud);
 
 	if(rc == 0) {
-		if(strcmp(TEST_FOR_USER, ud->username) != 0) {
+		if(strncmp(TEST_FOR_USER, ud->username, strlen(TEST_FOR_USER)) != 0) {
 			rc |= -1;
 		}
 
