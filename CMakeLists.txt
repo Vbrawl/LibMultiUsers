@@ -15,3 +15,6 @@ include(GNUInstallDirs)
 install(TARGETS ${PROJECT_NAME}
 		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+enable_testing()
+add_subdirectory(tests)
