@@ -27,7 +27,6 @@ int getn_user_data(const char* username, size_t len, user_data_t **ud) {
 int get_user_data(const char* username, user_data_t **ud) {
 	int rc = 0;
 	char *rusername = NULL, *home_path = NULL;
-	char *pw_password = NULL, *pw_salt = NULL, *pw_algorithm = NULL;
 	uid_t user_id = 0;
 	gid_t group_id = 0;
 #if defined(__linux__)
@@ -43,8 +42,6 @@ int get_user_data(const char* username, user_data_t **ud) {
 			group_id = udetails.pw_gid;
 
 			size_t namelen = strlen(udetails.pw_name)+1;
-			size_t passwdlen = strlen(udetails.pw_passwd)+1;
-			#pragma message ( "TODO: Better password parsing!" )
 			size_t homelen = strlen(udetails.pw_dir)+1;
 
 			rusername = malloc(namelen);

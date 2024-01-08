@@ -5,15 +5,8 @@
 #include <sys/types.h>
 #endif
 
-struct user_password {
-	const char* password;
-	const char* salt;
-	const char* algorithm;
-};
-
 typedef struct user_data {
 	const char* username;
-	const struct user_password password;
 	const char* home_path;
 	const uid_t user_id;
 	const gid_t group_id;
