@@ -5,7 +5,7 @@ set(CMAKE_BUILD_TYPE Debug)
 project(multiusers VERSION 1.0.0 DESCRIPTION "libmultiusers provides a common interface for managing OS-level users under different operating systems")
 
 
-add_library(${PROJECT_NAME} SHARED src/multiusers.c)
+add_library(${PROJECT_NAME} SHARED src/multiusers.c src/multiusers_safe.c)
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER include/multiusers.h)
 
