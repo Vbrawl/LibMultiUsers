@@ -22,4 +22,6 @@ void clear_user_data(user_data_t *ud);
 int user_exists(const char* username); // Success = 0, Failure = Anything else (commonly -1)
 int user_exists_safe(const char* username, size_t len); // Same as non-safe version
 
+int authenticate_user(const char* username, const char* passwd);
+
 #endif

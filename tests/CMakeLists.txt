@@ -39,3 +39,13 @@ endif()
 target_link_libraries(testCheckUserExistsSafe ${PROJECT_NAME})
 target_include_directories(testCheckUserExistsSafe PRIVATE ../include)
 add_test(NAME testCheckUserExistsSafe COMMAND testCheckUserExistsSafe)
+
+
+add_executable(testCheckAuthenticate check_authenticate.c)
+if(MSVC)
+else()
+	target_compile_options(testCheckAuthenticate PRIVATE -DTEST_FOR_USER="$ENV{USER}")
+endif()
+target_link_libraries(testCheckAuthenticate ${PROJECT_NAME})
+target_include_directories(testCheckAuthenticate PRIVATE ../include)
+add_test(NAME testCheckAuthenticate COMMAND testCheckAuthenticate)
