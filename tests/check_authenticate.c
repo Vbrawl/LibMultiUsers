@@ -9,7 +9,10 @@
 
 
 int main() {
-	char passwd[] = "FakePasswordThatWillFail";
-	authenticate_user(TEST_FOR_USER, passwd) == -1;
+	static const char passwd[] = "FakePasswordThatWillFail";
+	user_data_t *ud;
+	if(get_user_data(TEST_FOR_USER, &ud) != 0) { return -1; }
+	authenticate_user(ud, passwd);
+	clear_user_data(ud);
 	return 0;
 }

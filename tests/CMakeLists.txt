@@ -1,51 +1,20 @@
+macro(make_test test_name) # Add extra arguments to specify the source files
+	add_executable(${test_name} ${ARGN})
+	target_link_libraries(${test_name} ${PROJECT_NAME})
+	target_include_directories(${test_name} PRIVATE ../include)
 
-add_executable(testUser user.c)
-if(MSVC)
-else()
-	target_compile_options(testUser PRIVATE -DTEST_FOR_USER="$ENV{USER}")
-endif()
-target_link_libraries(testUser ${PROJECT_NAME})
-target_include_directories(testUser PRIVATE ../include)
-add_test(NAME testUser COMMAND testUser)
+	if(MSVC)
+	else()
+		target_compile_options(${test_name} PRIVATE -DTEST_FOR_USER="$ENV{USER}")
+	endif()
 
+	add_test(NAME ${test_name} COMMAND ${test_name})
+endmacro()
 
-
-add_executable(testUserSafe user_safe.c)
-if(MSVC)
-else()
-	target_compile_options(testUserSafe PRIVATE -DTEST_FOR_USER="$ENV{USER}")
-endif()
-target_link_libraries(testUserSafe ${PROJECT_NAME})
-target_include_directories(testUserSafe PRIVATE ../include)
-add_test(NAME testUserSafe COMMAND testUserSafe)
-
-
-
-add_executable(testCheckUserExists check_user_exists.c)
-if(MSVC)
-else()
-	target_compile_options(testCheckUserExists PRIVATE -DTEST_FOR_USER="$ENV{USER}")
-endif()
-target_link_libraries(testCheckUserExists ${PROJECT_NAME})
-target_include_directories(testCheckUserExists PRIVATE ../include)
-add_test(NAME testCheckUserExists COMMAND testCheckUserExists)
-
-
-add_executable(testCheckUserExistsSafe check_user_exists_safe.c)
-if(MSVC)
-else()
-	target_compile_options(testCheckUserExistsSafe PRIVATE -DTEST_FOR_USER="$ENV{USER}")
-endif()
-target_link_libraries(testCheckUserExistsSafe ${PROJECT_NAME})
-target_include_directories(testCheckUserExistsSafe PRIVATE ../include)
-add_test(NAME testCheckUserExistsSafe COMMAND testCheckUserExistsSafe)
-
-
-add_executable(testCheckAuthenticate check_authenticate.c)
-if(MSVC)
-else()
-	target_compile_options(testCheckAuthenticate PRIVATE -DTEST_FOR_USER="$ENV{USER}")
-endif()
-target_link_libraries(testCheckAuthenticate ${PROJECT_NAME})
-target_include_directories(testCheckAuthenticate PRIVATE ../include)
-add_test(NAME testCheckAuthenticate COMMAND testCheckAuthenticate)
+make_test(testUser user.c)
+make_test(testUserSafe user_safe.c)
+make_test(testUserExists check_user_exists.c)
+make_test(testUserExistsSafe check_user_exists_safe.c)
+make_test(testAuthenticate check_authenticate.c)
+make_test(testCurrentUser check_current_user.c)
+make_test(testBecomeUser check_become_user.c)

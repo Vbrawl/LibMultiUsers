@@ -1,9 +1,14 @@
+#include "multiusers.h"
 #include <security/pam_appl.h>
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __linux__
+#include <grp.h>
+#include <unistd.h>
+#endif
+
 #ifndef PAM_SERVICE_STRING
-//#define PAM_SERVICE_STRING "system-auth"
 #define PAM_SERVICE_STRING "system-remote-login"
 #endif
 
@@ -35,7 +40,7 @@ int authenticate_user_conv(int num_msg, const struct pam_message **msg, struct p
 #endif
 
 
-int authenticate_user(const char* username, const char* password) {
+int authenticate_user(user_data_t *user, const char* password) {
 	int rc = 0;
 #ifdef __linux__
 	pam_handle_t *pamh;
@@ -46,7 +51,7 @@ int authenticate_user(const char* username, const char* password) {
 	pamc.appdata_ptr = (char*)password;
 
 	// Perform the authentication
-	rc = pam_start(PAM_SERVICE_STRING, username, &pamc, &pamh);
+	rc = pam_start(PAM_SERVICE_STRING, user->username, &pamc, &pamh);
 	if(rc == PAM_SUCCESS) {
 		rc = pam_authenticate(pamh, 0);
 		pam_end(pamh, rc);
@@ -55,6 +60,29 @@ int authenticate_user(const char* username, const char* password) {
 	// Make sense of return code
 	if(rc == PAM_SUCCESS) { rc = 0; }
 	else { rc = -1; }
+#endif
+	return rc;
+}
+
+
+int become_user(user_data_t *user) {
+	int rc = 0;
+#ifdef __linux__
+	user_data_t *current;
+	if(get_current_user_data(&current) != 0) { return -1; }
+
+	if(setgroups(user->supplementary_groups.size, user->supplementary_groups.groups) == -1) { rc = -2; }
+	else {
+		if(setgid(user->group_id) == -1) { rc = -3; }
+		else if(setuid(user->user_id) == -1) { rc = -4; }
+
+		if(rc != 0) {
+			setgroups(current->supplementary_groups.size, current->supplementary_groups.groups);
+			setgid(current->group_id);
+		}
+	}
+
+	clear_user_data(current);
 #endif
 	return rc;
 }
