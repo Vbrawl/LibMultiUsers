@@ -21,11 +21,11 @@ int structpasswd_to_userdatat(struct passwd *udetails, user_data_t *udata) {
 
 	udata->username = malloc(namelen);
 	if(udata->username == NULL) { rc = -1; }
-	else { strncpy((char*)udata->username, udetails->pw_name, namelen-1); }
+	else { strncpy((char*)udata->username, udetails->pw_name, namelen); }
 
 	udata->home_path = malloc(homelen);
 	if(udata->home_path == NULL) { rc = -1; }
-	else { strncpy((char*)udata->home_path, udetails->pw_dir, homelen-1); }
+	else { strncpy((char*)udata->home_path, udetails->pw_dir, homelen); }
 
 	return rc;
 }
@@ -60,6 +60,7 @@ int get_current_user_data(user_data_t **ud) {
 	char* buffer = malloc(buflen);
 	if(buffer == NULL) { rc = -1; }
 	else {
+		memset(buffer, 0, buflen);
 		getpwuid_r(uid, &udetails, buffer, buflen, &udetails_ptr);
 		if(udetails_ptr == NULL) { rc = -1; }
 		else { rc = structpasswd_to_userdatat(udetails_ptr, *ud); }
@@ -83,6 +84,7 @@ int get_user_data(const char* username, user_data_t **ud) {
 	char* buffer = malloc(buflen);
 	if(buffer == NULL) { rc = -1; }
 	else {
+		memset(buffer, 0, buflen);
 		getpwnam_r(username, &udetails, buffer, buflen, &udetails_ptr);
 		if(udetails_ptr == NULL) { rc = -1; }
 		else { structpasswd_to_userdatat(udetails_ptr, *ud); }
